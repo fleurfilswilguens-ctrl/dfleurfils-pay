@@ -1,0 +1,45 @@
+## Proxy ant Pwojè Netlify yo
+
+Pou fè yon pwojè Netlify aji kòm yon **admin/gateway** ki resevwa epi vwayaje tout demann ki soti nan lòt pwojè yo, ou ka itilize **internal rewrites (proxy)**.
+
+### Kijan sa travay
+
+Ou mete règ rewrite nan pwojè "admin" ou a, ki pral **proxy** demann yo ale nan lòt pwojè Netlify yo.
+
+### Egzanp konfigirasyon (`netlify.toml`)
+
+```toml
+[[redirects]]
+  from = "/site-a/*"
+  to = "https://my-site-a.netlify.app/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/site-b/*"
+  to = "https://my-site-b.netlify.app/:splat"
+  status = 200
+```
+
+Avèk sa, tout demann ki ale sou `/site-a/...` oswa `/site-b/...` nan pwojè admin ou a ap **proxy** ale nan lòt pwojè yo, san vizitè a pa wè chanjman nan URL la.
+
+### Pwen enpòtan pou sonje
+
+- Ou dwe itilize **`.netlify.app` subdomain** pou lòt pwojè yo (pa custom domain) nan règ rewrite ou a. [[Proxy Netlify site](https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/#proxy-to-another-netlify-site)]
+- Proxy ant pwojè ki sou **ekip diferan** pa pèmèt pou rezon sekirite. [[Rewrites limitations](https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/#_top)]
+- Pa gen plis pase **yon sèl "hop"** — ou pa ka proxy SiteA → SiteB → SiteC nan yon sèl demann. [[Rewrites limitations](https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/#_top)]
+- Demann proxy yo gen yon **timeout de 26 segonn**. [[Rewrites limitations](https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/#_top)]
+
+### Ajoute headers pèsonalize (opsyonèl)
+
+Si ou vle voye headers espesyal ak chak demann proxy:
+
+```toml
+[[redirects]]
+  from = "/site-a/*"
+  to = "https://my-site-a.netlify.app/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Admin-Gateway"}
+```
+
+[[Custom headers proxy](https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/#proxy-to-another-service)]
